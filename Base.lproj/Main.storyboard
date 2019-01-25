@@ -43,10 +43,10 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" restorationIdentifier="email" text="email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7R0-Bu-FoZ">
-                                                    <rect key="frame" x="109" y="27" width="124" height="10"/>
+                                                    <rect key="frame" x="109" y="27" width="237" height="10"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="124" id="9EJ-NN-WZR"/>
                                                         <constraint firstAttribute="height" constant="10" id="UhU-1a-jyu"/>
+                                                        <constraint firstAttribute="width" constant="237" id="Yg3-BN-YcD"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" red="0.24705882352941178" green="0.48627450980392156" blue="0.67450980392156867" alpha="1" colorSpace="calibratedRGB"/>
