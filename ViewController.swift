@@ -11,9 +11,9 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var users: [User] = []
+    var currentUser: User?
     
     @IBOutlet weak var tableView: UITableView!
-    let list = ["Antonis", "Nadia", "Takis", "Katia", "Malika"]
     
     
     override func viewDidLoad() {
@@ -42,10 +42,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        currentUser = users[indexPath.row]
+        let Storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let DvC = Storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+    DvC.user = currentUser
+    self.navigationController?.pushViewController(DvC, animated: true)
     
+    }
 
-
-    
     
     func getContent(){
         let url = URL(string: "https://randomuser.me/api/?results=25&seed=todoris")
