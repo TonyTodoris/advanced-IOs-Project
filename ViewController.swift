@@ -8,22 +8,63 @@
 import Foundation
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+    
     
     var users: [User] = []
+    var filteredUsers: [User] = [] //update Table
     var currentUser: User?
-    
+    var isSearching = false
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getContent()
-        // Do any additional setup after loading the view, typically from a nib.
+        getContent()// get content from API function
+        setUpSearchBar();
+       
+    }
+    
+    //Search bar
+    
+    
+    func setUpSearchBar(){
+        searchBar.delegate = self
+        searchBar.returnKeyType = UIReturnKeyType.done
     }
     
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text == nil || searchBar.text == "" {
+            isSearching =  false
+            
+            view.endEditing(true)
+            tableView.reloadData()
+        } else{
+            isSearching = true
+            
+            if searchText.count >= 3 { // Activate search bar text after the third letter entry 
+                filteredUsers = users.filter({(user: User) -> Bool in
+                    return user.First.lowercased().contains(searchText.lowercased())
+                })
+                tableView.reloadData()
+            }
+            
+            
+        }
+        
+        
+    }
+    
+    
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isSearching {
+            return filteredUsers.count
+        }
+        
         return users.count
     }
     
@@ -36,18 +77,35 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
              cell.backgroundColor = UIColor.init(red: 180.0/255.0, green: 126.0/255.0, blue: 179.0/255.0, alpha: 0.1)
         }
         
-        cell.load(users[indexPath.item])
+        if isSearching {
+            cell.load(filteredUsers[indexPath.item])
+        }else {
+            cell.load(users[indexPath.item])
+        }
+        
+        
        /* let user = User(Title: "Title", First: "Antonios", Last: "Todoris", Street: "Ververoda", City: "Kranidi", Email: "anto@gmail.com", Phone: "1234", Cell: "5678", LargePictureURL: "https://randomuser.me/api/portraits/thumb/men/65.jpg", smallPictureURL: "https://randomuser.me/api/portraits/thumb/men/65.jpg")
         cell.load(user) */
         return cell
     }
     
    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    
+    if isSearching {
+        currentUser = filteredUsers[indexPath.row]
+        let Storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let DvC = Storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        DvC.user = currentUser
+        self.navigationController?.pushViewController(DvC, animated: true)
+    }else{
         currentUser = users[indexPath.row]
         let Storyboard = UIStoryboard(name: "Main", bundle: nil)
-    let DvC = Storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
-    DvC.user = currentUser
-    self.navigationController?.pushViewController(DvC, animated: true)
+        let DvC = Storyboard.instantiateViewController(withIdentifier: "DetailViewController") as! DetailViewController
+        DvC.user = currentUser
+        self.navigationController?.pushViewController(DvC, animated: true)
+        
+    }
+    
     
     }
 
@@ -116,7 +174,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                                        LargePictureURL: large,
                                                        smallPictureURL: thumbnail)
                                     self.users.append(newUser)
-                                    
                                     DispatchQueue.main.async {
                                         self.tableView.reloadData()
                                     }
